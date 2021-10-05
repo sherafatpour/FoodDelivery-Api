@@ -12,6 +12,10 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    public static $ADMIN = "Admin"; 
+    public static $MANAGER = "Manager"; 
+    public static $USER = "User"; 
+
     /**
      * The attributes that are mass assignable.
      *
@@ -21,6 +25,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'mobile',
+        'user_role',
+        'user_status',
     ];
 
     /**

@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 class UserFactory extends Factory
@@ -24,10 +25,11 @@ class UserFactory extends Factory
     {
         return [
             'name' => $this->faker->name(),
-            'email' => $this->faker->unique()->safeEmail(),
-            'email_verified_at' => now(),
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
-            'remember_token' => Str::random(10),
+            'mobile' => $this->randomNumberSequence(),
+            'password' => Hash::make(Str::random(10)), // password
+            'user_role' => 'User',
+            'user_status' => '1'
+
         ];
     }
 
@@ -43,5 +45,14 @@ class UserFactory extends Factory
                 'email_verified_at' => null,
             ];
         });
+    }
+    public function randomNumberSequence($requiredLength = 7, $highestDigit = 8)
+    {
+        $numberPrefixes = ['0912', '0913', '0814', '0915', '0916', '0917', '0918', '0919', '0909', '0908'];
+        $sequence = '';
+        for ($i = 0; $i < $requiredLength; ++$i) {
+            $sequence .= mt_rand(0, $highestDigit);
+        }
+        return $numberPrefixes[array_rand($numberPrefixes)] . $sequence;
     }
 }
