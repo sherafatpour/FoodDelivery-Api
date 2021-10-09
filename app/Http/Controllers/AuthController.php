@@ -21,24 +21,20 @@ class AuthController extends Controller
     public function index(Request  $request)
     {
 
-        // $usr = new User();
+        if (Gate::allows('viewAny', auth()->user())) {
 
-        // if (Gate::forUser(auth()->user())->allows('view', $usr)) {
-        // }
-        // return response(['message' => 'Forbidden'], 403);
+            // search user
+            if ($request->has('name')) {
 
-        // search user
-        if ($request->has('name')) {
+                $user = User::where('name', 'LIKE', '%' . $request['name'] . '%')->paginate();
 
-            $user = User::where('name', 'LIKE', '%' . $request['name'] . '%')->paginate();
+                return $user;
+            } // all user
+            $user = User::paginate();
 
             return $user;
         }
-
-        // all user
-        $user = User::paginate();
-
-        return $user;
+        return response(['message' => 'Forbidden'], 403);
     }
 
     /**
@@ -50,7 +46,6 @@ class AuthController extends Controller
     public function store(UserRegisterRequest $request)
     {
 
-        $usr = new User();
 
         $user = User::create([
             "name" => $request['name'],
@@ -78,7 +73,19 @@ class AuthController extends Controller
      */
     public function show(User $user)
     {
-        return $user;
+
+
+        if (Gate::forUser(auth()->user())->allows('view', $user)) {
+
+
+            //check exist user
+            if (!$user)
+                return Response(['message' => 'User Not Found'], 404);
+
+
+            return $user;
+        }
+        return response(['message' => 'Forbidden'], 403);
     }
 
     /**
@@ -86,7 +93,7 @@ class AuthController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
+     *   @return \Illuminate\Http\Response
      */
     public function update(Request $request, User $user)
     {
@@ -101,18 +108,24 @@ class AuthController extends Controller
      */
     public function destroy($user)
     {
-        //get user
-        $user = User::where('id', $user)->first();
 
-        //check exist user
-        if (!$user) {
 
-            return Response(['message' => 'Not Found User'], 404);
+        if (Gate::forUser(auth()->user())->allows('forceDelete', $user)) {
+
+            //get user
+            $user = User::where('id', $user)->first();
+
+            //check exist user
+            if (!$user) {
+
+                return Response(['message' => 'User Not Found'], 404);
+            }
+
+            //delete user
+            $destroy = $user->delete();
+            return Response(['message' => 'User Deleted'], 202);
         }
-
-        //delete user
-        $destroy = $user->delete();
-        return Response(['message' => 'User Deleted'], 202);
+        return response(['message' => 'Forbidden'], 403);
     }
 
 
