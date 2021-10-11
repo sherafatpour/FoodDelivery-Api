@@ -1,9 +1,7 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
-
+use App\Http\Controllers\Api\V1\AuthController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -17,7 +15,7 @@ use App\Http\Controllers\AuthController;
 
 
 
-Route::prefix('users')->group(function () {
+Route::prefix('users/v1/')->group(function () {
 
     //public routes
     Route::post('/register', [AuthController::class, 'store']);
