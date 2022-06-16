@@ -19,12 +19,7 @@ class CreateAddressesTable extends Migration
             $table->string('latitude', 20)->nullable();
             $table->string('longitude', 20)->nullable();
             $table->morphs('addressable');
-            $table->unsignedBigInteger('user_id');
-
-            $table->foreign('user_id')
-            ->references('id')
-            ->on('users')
-            ->onDelete('cascade');
+           
             
             $table->timestamps();
             $table->softDeletes();
