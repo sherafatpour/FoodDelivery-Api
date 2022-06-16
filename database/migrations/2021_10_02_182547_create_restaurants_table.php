@@ -28,10 +28,6 @@ class CreateRestaurantsTable extends Migration
             ->on("users")
             ->onUpdate('cascade')
             ->onDelete('cascade');
-
-            
-     
-
             $table->foreign('city_id')
             ->references('id')
             ->on('iran_cities')

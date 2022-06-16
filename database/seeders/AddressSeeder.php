@@ -2,7 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Address;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Schema;
 
 class AddressSeeder extends Seeder
 {
@@ -13,6 +15,9 @@ class AddressSeeder extends Seeder
      */
     public function run()
     {
-        //
+        Schema::disableForeignKeyConstraints();
+        Address::truncate();
+        Address::factory(100)->create();
+        Schema::enableForeignKeyConstraints();
     }
 }

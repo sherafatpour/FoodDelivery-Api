@@ -12,9 +12,9 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    public static $ADMIN = "Admin"; 
-    public static $MANAGER = "Manager"; 
-    public static $USER = "User"; 
+    public static $ADMIN = "Admin";
+    public static $MANAGER = "Manager";
+    public static $USER = "User";
 
     /**
      * The attributes that are mass assignable.
@@ -40,6 +40,7 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    //protected $with = ['addresses'];
     /**
      * The attributes that should be cast.
      *
@@ -48,4 +49,10 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+
+    public function addresses()
+    {
+        return $this->morphMany(Address::class, 'addressable');
+    }
 }

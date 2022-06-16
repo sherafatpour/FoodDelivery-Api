@@ -26,11 +26,11 @@ class AuthController extends Controller
             // search user
             if ($request->has('name')) {
 
-                $user = User::where('name', 'LIKE', '%' . $request['name'] . '%')->paginate();
+                $user = User::with('addresses')->where('name', 'LIKE', '%' . $request['name'] . '%')->paginate();
 
                 return $user;
             } // all user
-            $user = User::paginate();
+            $user = User::with('addresses')->paginate();
 
             return $user;
         }
