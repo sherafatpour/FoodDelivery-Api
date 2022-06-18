@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\Api\V1\AddressController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\AuthController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -12,7 +14,6 @@ use App\Http\Controllers\Api\V1\AuthController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
 
 
 Route::prefix('users/v1/')->group(function () {
@@ -36,6 +37,10 @@ Route::prefix('users/v1/')->group(function () {
 //Route::resource('users', AuthController::class);
 
 
-//protected routs
-Route::group(['middleware' => ['auth:sanctum']], function () {
+Route::prefix('addresses/v1/')->group(function () {
+    //protected routs
+    Route::group(['middleware' => ['auth:sanctum']], function () {
+
+        Route::delete('/address/{address}', [AddressController::class, 'destroy']);
+    });
 });
