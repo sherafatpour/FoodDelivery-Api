@@ -75,7 +75,7 @@ class AuthController extends Controller
     {
 
 
-        if (Gate::forUser(auth()->user())->allows('view', $user)) {
+        if (auth()->user()->can('view', $user)) {
 
 
             //check exist user

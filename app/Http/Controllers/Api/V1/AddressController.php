@@ -81,8 +81,24 @@ class AddressController extends Controller
      */
     public function destroy(Address $address)
     {
-        //
+        if (auth()->user()->can('delete', $address)) {
 
-        dd($address);
+            //get address
+            $address = Address::where('id', $address->id)->first();
+
+            //check exist user
+            if (!$address) {
+
+                return Response(['message' => 'Address Not Found'], 404);
+            }
+
+            $address->delete();
+
+            return response(['message' => 'Address Deleted'], 200);
+        }
+
+        return response(['message' => 'Forbidden'], 403);
     }
 }
+    
+

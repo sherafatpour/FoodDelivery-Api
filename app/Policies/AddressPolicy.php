@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Models\Address;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Support\Facades\Auth;
 
 class AddressPolicy
 {
@@ -18,7 +19,7 @@ class AddressPolicy
      */
     public function viewAny(User $user)
     {
-        //
+        return $user->user_role === 'Admin' || $user->user_role === 'Manager' || $user->id === $$address->addressable_id;
     }
 
     /**
@@ -30,7 +31,7 @@ class AddressPolicy
      */
     public function view(User $user, Address $address)
     {
-        //
+        return $user->user_role === 'Admin' || $user->user_role === 'Manager' || $user->id === $address->addressable_id;
     }
 
     /**
@@ -41,7 +42,7 @@ class AddressPolicy
      */
     public function create(User $user)
     {
-        //
+        return true;
     }
 
     /**
@@ -53,7 +54,7 @@ class AddressPolicy
      */
     public function update(User $user, Address $address)
     {
-        //
+        return auth()->user()->id == $address->addressable_id || $user->user_role === 'Admin' || $user->user_role === 'Manager';
     }
 
     /**
@@ -65,7 +66,9 @@ class AddressPolicy
      */
     public function delete(User $user, Address $address)
     {
-        //
+
+       
+        return   $user->id == $address->addressable_id/* || $user->user_role === 'Admin' || $user->user_role === 'Manager' */;
     }
 
     /**
@@ -78,6 +81,7 @@ class AddressPolicy
     public function restore(User $user, Address $address)
     {
         //
+        return $user->user_role === 'Admin' || $user->user_role === 'Manager';
     }
 
     /**
@@ -89,6 +93,6 @@ class AddressPolicy
      */
     public function forceDelete(User $user, Address $address)
     {
-        //
+        return   auth()->user()->id == $address->addressable_id || $user->user_role === 'Admin' || $user->user_role === 'Manager';
     }
 }
