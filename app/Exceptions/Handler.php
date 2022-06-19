@@ -2,7 +2,15 @@
 
 namespace App\Exceptions;
 
+use Exception;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -27,15 +35,22 @@ class Handler extends ExceptionHandler
         'password_confirmation',
     ];
 
+
     /**
-     * Register the exception handling callbacks for the application.
+     * Render an exception into a response.
      *
-     * @return void
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Exception  $e
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function register()
+
+    public function render($request, Throwable $e)
     {
-        $this->reportable(function (Throwable $e) {
-            //
-        });
+        if ($e instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException) {
+            return response([
+                'message' => 'not found'
+            ], 404);
+        }
+        return parent::render($request, $e);
     }
 }

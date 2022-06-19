@@ -34,13 +34,13 @@ Route::prefix('users/v1/')->group(function () {
 });
 
 
-//Route::resource('users', AuthController::class);
+Route::resource('address', AuthController::class)->middleware('auth:sanctum');
 
 
-Route::prefix('addresses/v1/')->group(function () {
-    //protected routs
-    Route::group(['middleware' => ['auth:sanctum']], function () {
+// Route::prefix('addresses/v1/')->group(function () {
+//     //protected routs
+//     Route::group(['middleware' => ['auth:sanctum']], function () {
 
-        Route::delete('/address/{address}', [AddressController::class, 'destroy']);
-    });
-});
+//         Route::delete('/address/{address}', [AddressController::class, 'destroy']);
+//     });
+// });
