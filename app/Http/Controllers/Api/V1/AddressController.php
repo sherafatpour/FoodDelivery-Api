@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Models\Address;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class AddressController extends Controller
@@ -36,7 +37,18 @@ class AddressController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+            $user = auth()->user();
+        
+            if (auth()->user()->can('create', $user)) {
+            $address = new Address(['address'=>$request->address,'latitude'=>$request->latitude,'longitude'=>$request->longitude]);
+
+
+            $user->addresses()->save($address);
+
+            return $address;
+            }
+            return response(['message' => 'Forbidden'], 403);
     }
 
     /**
@@ -47,7 +59,12 @@ class AddressController extends Controller
      */
     public function show(Address $address)
     {
-        //
+
+        if (auth()->user()->can('view', $address)) {
+            return $address;
+        }
+
+        return response(['message' => 'Forbidden'], 403);
     }
 
     /**
@@ -70,7 +87,11 @@ class AddressController extends Controller
      */
     public function update(Request $request, Address $address)
     {
-        //
+        if (auth()->user()->can('update', $address)) {
+            $address->update($request->all());
+            return response()->json($address, 200);
+        }
+        return response(['message' => 'Forbidden'], 403);
     }
 
     /**
@@ -83,22 +104,18 @@ class AddressController extends Controller
     {
         if (auth()->user()->can('delete', $address)) {
 
-            //get address
-            $address = Address::where('id', $address->id)->first();
 
-            //check exist user
-            if (!$address) {
+            if ($address) {
 
-                return Response(['message' => 'Address Not Found'], 404);
+                $address->delete();
+                return response(['message' => 'Address Deleted'], 200);
+
             }
+            return Response(['message' => 'Address Not Found'], 404);
+           
 
-            $address->delete();
-
-            return response(['message' => 'Address Deleted'], 200);
         }
 
         return response(['message' => 'Forbidden'], 403);
     }
 }
-    
-

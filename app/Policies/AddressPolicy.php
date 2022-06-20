@@ -42,7 +42,7 @@ class AddressPolicy
      */
     public function create(User $user)
     {
-        return true;
+        return auth()->user()->id == $user->id || $user->user_role === 'Admin' || $user->user_role === 'Manager';;
     }
 
     /**
@@ -68,7 +68,7 @@ class AddressPolicy
     {
 
        
-        return   $user->id == $address->addressable_id/* || $user->user_role === 'Admin' || $user->user_role === 'Manager' */;
+        return  $user->id == $address->addressable_id/* || $user->user_role === 'Admin' || $user->user_role === 'Manager' */;
     }
 
     /**
